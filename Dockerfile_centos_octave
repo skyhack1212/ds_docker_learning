@@ -1,0 +1,6 @@
+FROM centos
+
+MAINTAINER octave_demo
+
+RUN rpm -Uvh http://mirror.math.princeton.edu/pub/epel/epel-release-latest-7.noarch.rpm \
+    && yum install -y octave

@@ -1,0 +1,26 @@
+FROM ubuntu:14.04
+
+MAINTAINER flask_demo
+
+RUN apt-get update \
+    #&& dpkg-reconfigure -u \
+    #&& apt-get install -y apt-utils \
+    && apt-get install -y git \
+    && apt-get install -y vim \
+    && apt-get install -y python-pip \
+    && pip install --upgrade pip \
+    && apt-get install -y python2.7-dev \
+    && apt-get install -y apache2 \
+    && apt-get install libapache2-mod-wsgi \
+    && apt-get install -y libmysqlclient-dev \
+    && sed -i 's/80/5000/' /etc/apache2/ports.conf
+
+ADD requirements.txt /tmp/requirements.txt
+RUN pip --default-timeout=100 install -r /tmp/requirements.txt
+
+RUN mkdir /var/www/public_html
+ADD flaskapp.wsgi /var/www/flaskapp/flaskapp.wsgi
+ADD flaskapp.cfg /etc/apache2/sites-available/flaskapp.conf
+RUN a2ensite flaskapp.conf
+
+EXPOSE 5000
